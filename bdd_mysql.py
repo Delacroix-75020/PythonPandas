@@ -1,17 +1,19 @@
 import pymysql.cursors
 import pymysql
-
+import json
 
 
 class Database:
     def __init__(self) -> None:
+        with open("conf.json") as openfile:
+            conf = json.load(openfile)
         # Connect to the database
-        self.__connection = pymysql.connect(host='mysql-adriendelacroix.alwaysdata.net',
-                                    user='287438',
-                                    password='PythonPanda',
-                                    database='adriendelacroix_pythonpandas',
-                                    cursorclass=pymysql.cursors.DictCursor)
-    
+        self.__connection = pymysql.connect(host=conf["connect"],
+                                            user=conf["user"],
+                                            password=conf["password"],
+                                            database=conf["database"],
+                                            cursorclass=pymysql.cursors.DictCursor)
+
     def __getitem__(self):
         with self.__connection.cursor() as cursor:
             # Read a single record
