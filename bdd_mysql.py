@@ -2,20 +2,21 @@ import pymysql.cursors
 import pymysql
 
 
+
 class Database:
     def __init__(self) -> None:
         # Connect to the database
-        self.__connection = pymysql.connect(host='localhost',
-                                    user='user',
-                                    password='passwd',
-                                    database='db',
+        self.__connection = pymysql.connect(host='mysql-adriendelacroix.alwaysdata.net',
+                                    user='287438',
+                                    password='PythonPanda',
+                                    database='adriendelacroix_pythonpandas',
                                     cursorclass=pymysql.cursors.DictCursor)
     
-    def __getitem__(self, key):
+    def __getitem__(self):
         with self.__connection.cursor() as cursor:
             # Read a single record
-            sql = "SELECT `id`, `password` FROM `users` WHERE `email`=%s"
-            cursor.execute(sql, (key,))
+            sql = "SELECT * FROM airlines"
+            cursor.execute(sql)
             result = cursor.fetchone()
             print(result)
             
@@ -30,4 +31,6 @@ class Database:
             # your changes.
             self.__connection.commit()
 
-        
+
+db = Database()
+db.__getitem__()
