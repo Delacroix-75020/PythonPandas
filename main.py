@@ -38,6 +38,8 @@ def exo3_carrier_nb_dest() -> None:
     df.plot(kind="bar",
             figsize=(8, 8),
             title="nombre de destination par compagnie aérienne")
+    plt.show()
+def exo3_carrier_nb_origin() -> None:
     res = {}
     for carrier1, value1 in FLIGHTS.groupby(["carrier"]):
         res[AIRLINES_JSON[carrier1]] = {}
@@ -52,4 +54,4 @@ def exo3_carrier_nb_dest() -> None:
     plt.show()
 
 
-# exo3_carrier_nb_dest()
+#exo3_carrier_nb_dest()
