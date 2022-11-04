@@ -60,6 +60,8 @@ def exo3_carrier_nb_dest() -> None:
     df.plot(kind="bar",
             figsize=(8, 8),
             title="nombre de destination par compagnie aérienne")
+    plt.show()
+def exo3_carrier_nb_origin() -> None:
     res = {}
     for carrier1, value1 in FLIGHTS.groupby(["carrier"]):
         res[AIRLINES_JSON[carrier1]] = {}
@@ -74,7 +76,68 @@ def exo3_carrier_nb_dest() -> None:
     plt.show()
 
 
-# exo3_carrier_nb_dest()
+#exo3_carrier_nb_dest()
+
+def exo5() -> None:
+    """Trouver le nombre de vols par destination ?
+    Trier les vols suivant la destination, l’aéroport d’origine,
+    la compagnie dans un ordre alphabétique croissant
+    (en réalisant les jointures nécessaires pour obtenir
+    les noms des explicites des aéroports) ?
+    """
+    print("nb vol par destination:")
+    for dest, value in FLIGHTS.groupby(["dest"]):
+        try:
+            print(AIRPORTS_JSON[dest], len(value))
+        except Exception:
+            print(dest, len(value))
+    print("\n================================")
+    df = FLIGHTS
+    df['origin'] = df['origin'].map(
+        AIRPORTS.set_index('faa')['name'])
+    df['dest'] = df['dest'].map(AIRPORTS.set_index('faa')['name'])
+    df['carrier'] = df['carrier'].map(
+        AIRLINES.set_index('carrier')['name'])
+    print(df.sort_values(["dest", "origin", "carrier"]
+                         ).groupby("dest").head().set_index('dest'))
+
+
+# exo5()
+
+def exo6():
+    """Quelles sont les compagnies qui n'opèrent pas
+    sur tous les aéroports d’origine ?
+    Quelles sont les compagnies qui desservent l’ensemble de destinations ?
+    Faire un tableau où l’on récupère l’ensemble des origines
+    et des destinations pour l’ensemble des compagnies.
+    """
+    starting_airport = FLIGHTS.origin.drop_duplicates().to_list()
+    arrival_airports = FLIGHTS.dest.drop_duplicates().to_list()
+    compagnies = FLIGHTS.set_index("carrier").groupby("carrier")
+    print("\n", "carrier that start from all origin:")
+    for compagnie in compagnies:
+        if len(
+                compagnie[1].drop_duplicates("origin")) == len(
+                    starting_airport):
+            print(AIRLINES_JSON[compagnie[0]])
+    print("\n", "carrier that go to all dest:")
+    for compagnie in compagnies:
+        if len(compagnie[1].drop_duplicates("dest")) == len(arrival_airports):
+            print(AIRLINES_JSON[compagnie[0]])
+
+
+exo6()
+
+
+def flight_cancelled():
+    print(
+        len(FLIGHTS.loc[FLIGHTS["dep_time"] == " "]
+            .loc[FLIGHTS["arr_time"] == " "]
+            .loc[FLIGHTS["air_time"] == " "]
+            ))
+
+
+# flight_cancelled()
 
 def exo5() -> None:
     """Trouver le nombre de vols par destination ?
