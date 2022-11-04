@@ -6,19 +6,19 @@ class Database:
     def __init__(self) -> None:
         # Connect to the database
         self.__connection = pymysql.connect(host='localhost',
-                                    user='user',
-                                    password='passwd',
-                                    database='db',
-                                    cursorclass=pymysql.cursors.DictCursor)
-    
-    def __getitem__(self, key):
+                                            user='user',
+                                            password='passwd',
+                                            database='db',
+                                            cursorclass=pymysql.cursors.DictCursor)
+
+    def __getitem__(self):
         with self.__connection.cursor() as cursor:
             # Read a single record
-            sql = "SELECT `id`, `password` FROM `users` WHERE `email`=%s"
-            cursor.execute(sql, (key,))
-            result = cursor.fetchone()
+            sql = "SELECT * FROM airlines"
+            cursor.execute(sql)
+            result = cursor.fetchall()
             print(result)
-            
+
     def __setitem__(self, key, value):
         with self.__connection:
             with self.__connection.cursor() as cursor:
@@ -30,4 +30,6 @@ class Database:
             # your changes.
             self.__connection.commit()
 
-        
+
+db = Database()
+db.__getitem__()
