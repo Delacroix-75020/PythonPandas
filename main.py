@@ -26,6 +26,8 @@ for index in AIRPORTS.index:
 # de fuseaux horaires (10 voir colone tzone dont une  « /N »)
 
 
+# Exercice 1 :
+
 def exo1():
     print("nb unique starting airport:", len(
         FLIGHTS.origin.drop_duplicates()))  # 3
@@ -51,11 +53,31 @@ def exo1():
         "number of unique timezone": len(df.value_counts())
     }
 
+# Exercice 2 :
+
+def busiest_departure_airport():
+    aeroport = FLIGHTS["origin"].mode()
+    return aeroport
+
+def most_frequent_destinations():
+    merged_tables = FLIGHTS.merge(AIRPORTS,how ='left', left_on ='dest', right_on ='faa')
+    frequent_destinations = merged_tables['name'].value_counts(normalize=True).head(10)
+    return frequent_destinations
+
+def less_frequent_destinations():
+    destinations_moins_prisées = merged_tables['name'].value_counts(normalize=True).tail(10)
+    return destinations_moins_prisées
+
+def planes_taken_off_the_most():
+    planes_most  = FLIGHTS['tailnum'].value_counts().head(10)
+    return planes_most
+
+def planes_taken_off_the_least():
+    les_10_avions_moins = FLIGHTS['tailnum'].value_counts().tail(10)
+    return les_10_avions_moins
 
 
-
-# exo1()
-
+#Exercice 3 :
 
 def exo3_carrier_nb_dest() -> None:
     res1 = {}
@@ -83,8 +105,24 @@ def exo3_carrier_nb_origin() -> None:
              title="nombre de destination par compagnie par aéroprt d'origine")
     plt.show()
 
+#Exercice 4 :
+def landed_in_Houston():
+    landed_Houston = FLIGHTS.loc[FLIGHTS['dest'].isin(['IAH','HOU'])]
+    return landed_Houston
+def NYC_to_Seattle():
+    NYC_to_Seattle_table = FLIGHTS.loc[FLIGHTS['dest'].isin(["SEA"])]
+    NYC_Seattle = NYC_to_Seattle_table['dest'].value_counts()
+    return NYC_Seattle
+def carrier_NYC_to_Seattle():
+    NYC_Seattle_carrier = NYC_to_Seattle_table['carrier'].drop_duplicates(keep='first').count()
+    return NYC_Seattle_carrier
 
-# exo3_carrier_nb_dest()
+def plane_NYC_to_Seattle():
+    flights_sea = FLIGHTS[FLIGHTS['dest']=='SEA']
+    return flights_sea['tailnum'].nunique()
+
+
+#Exercice 5 :
 
 def exo5() -> None:
     """Trouver le nombre de vols par destination ?
@@ -110,8 +148,7 @@ def exo5() -> None:
     result = df.sort_values(["dest", "origin", "carrier"]).groupby("dest").head().set_index('dest')
     return result
 
-
-# exo5()
+#Exercice 6 :
 
 def exo6():
     """Quelles sont les compagnies qui n'opèrent pas
@@ -136,12 +173,23 @@ def exo6():
     for compagnie in compagnies:
         if len(compagnie[1].drop_duplicates("dest")) == len(arrival_airports):
             print(AIRLINES_JSON[compagnie[0]])
-    return
-    {
-        "Nombre de vols par destination" : AIRLINES_JSON[compagnie[0]]
-    }
 
-#exo6()
+
+#Exercice 7 :
+
+def destinations_exclusive():
+    groupby_destination_table = FLIGHTS.groupby(by="dest").nunique()
+    exclusive  = groupby_destination_table[groupby_destination_table['carrier'] == 1 ]
+    return list(exclusive.index.values)
+
+
+#Exercice 8 :
+
+def flights_UAD():
+    United_American_Delta_table  = FLIGHTS.loc[FLIGHTS['carrier'].isin(["UA", "AA", "DL"])]
+    return United_American_Delta_table
+
+flights_UAD()
 
 def flight_cancelled():
     print(
@@ -150,5 +198,3 @@ def flight_cancelled():
             .loc[FLIGHTS["air_time"] == " "]
             ))
 
-
-# flight_cancelled()
