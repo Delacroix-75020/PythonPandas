@@ -46,7 +46,6 @@ def exo1():
     print("number of airports in US where there's no DST:", count)
     df = AIRPORTS.tzone.drop(AIRPORTS.tzone[AIRPORTS.tzone == "\\N"].index)
     print("number of unique timezone", len(df.value_counts()))
-    
 
 
 # exo1()
@@ -100,14 +99,15 @@ def exo5() -> None:
     (en réalisant les jointures nécessaires pour obtenir
     les noms des explicites des aéroports) ?
     """
+    flights = pd.read_csv("flights.csv")
     print("nb vol par destination:")
-    for dest, value in FLIGHTS.groupby(["dest"]):
+    for dest, value in flights.groupby(["dest"]):
         try:
             print(AIRPORTS_JSON[dest], len(value))
         except Exception:
             print(dest, len(value))
     print("\n================================")
-    df = FLIGHTS
+    df = flights
     df['origin'] = df['origin'].map(
         AIRPORTS.set_index('faa')['name'])
     df['dest'] = df['dest'].map(AIRPORTS.set_index('faa')['name'])
@@ -130,13 +130,14 @@ def exo6():
     arrival_airports = FLIGHTS.dest.drop_duplicates().to_list()
     compagnies = FLIGHTS.set_index("carrier").groupby("carrier")
     print("\n", "carrier that start from all origin:")
-    origins={}
+    origins = {}
     for compagnie in compagnies:
         if len(
                 compagnie[1].drop_duplicates("origin")) == len(
                     starting_airport):
             print(AIRLINES_JSON[compagnie[0]])
-        origins[AIRLINES_JSON[compagnie[0]]]=(compagnie[1].drop_duplicates("origin").origin.to_list())
+        origins[AIRLINES_JSON[compagnie[0]]] = (
+            compagnie[1].drop_duplicates("origin").origin.to_list())
     print("\n", "carrier that go to all dest:")
     destinations = {}
     for compagnie in compagnies:
@@ -147,4 +148,5 @@ def exo6():
     pprint(destinations)
 
 
+exo5()
 exo6()
