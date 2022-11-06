@@ -65,8 +65,11 @@ def most_frequent_destinations():
     return frequent_destinations
 
 def less_frequent_destinations():
-    destinations_moins_prisées = merged_tables['name'].value_counts(normalize=True).tail(10)
-    return destinations_moins_prisées
+    merged_tables = FLIGHTS.merge(AIRPORTS,how ='left', left_on ='dest', right_on ='faa')
+    less_frequent = merged_tables['name'].value_counts(normalize=True).tail(10)
+    return less_frequent
+
+less_frequent_destinations()
 
 def planes_taken_off_the_most():
     planes_most  = FLIGHTS['tailnum'].value_counts().head(10)
@@ -113,7 +116,9 @@ def NYC_to_Seattle():
     NYC_to_Seattle_table = FLIGHTS.loc[FLIGHTS['dest'].isin(["SEA"])]
     NYC_Seattle = NYC_to_Seattle_table['dest'].value_counts()
     return NYC_Seattle
+
 def carrier_NYC_to_Seattle():
+    NYC_to_Seattle_table = FLIGHTS.loc[FLIGHTS['dest'].isin(["SEA"])]
     NYC_Seattle_carrier = NYC_to_Seattle_table['carrier'].drop_duplicates(keep='first').count()
     return NYC_Seattle_carrier
 
@@ -189,7 +194,6 @@ def flights_UAD():
     United_American_Delta_table  = FLIGHTS.loc[FLIGHTS['carrier'].isin(["UA", "AA", "DL"])]
     return United_American_Delta_table
 
-flights_UAD()
 
 def flight_cancelled():
     print(
