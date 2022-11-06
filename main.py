@@ -46,6 +46,12 @@ def exo1():
     print("number of airports in US where there's no DST:", count)
     df = AIRPORTS.tzone.drop(AIRPORTS.tzone[AIRPORTS.tzone == "\\N"].index)
     print("number of unique timezone", len(df.value_counts()))
+    return {
+        "number of airports in US where there's no DST:": count,
+        "number of unique timezone": len(df.value_counts())
+    }
+
+
 
 
 # exo1()
@@ -63,7 +69,6 @@ def exo3_carrier_nb_dest() -> None:
             title="nombre de destination par compagnie aérienne")
     plt.show()
 
-
 def exo3_carrier_nb_origin() -> None:
     res = {}
     for carrier1, value1 in FLIGHTS.groupby(["carrier"]):
@@ -80,17 +85,6 @@ def exo3_carrier_nb_origin() -> None:
 
 
 # exo3_carrier_nb_dest()
-
-def flight_cancelled():
-    print(
-        len(FLIGHTS.loc[FLIGHTS["dep_time"] == " "]
-            .loc[FLIGHTS["arr_time"] == " "]
-            .loc[FLIGHTS["air_time"] == " "]
-            ))
-
-
-# flight_cancelled()
-
 
 def exo5() -> None:
     """Trouver le nombre de vols par destination ?
@@ -113,11 +107,11 @@ def exo5() -> None:
     df['dest'] = df['dest'].map(AIRPORTS.set_index('faa')['name'])
     df['carrier'] = df['carrier'].map(
         AIRLINES.set_index('carrier')['name'])
-    print(df.sort_values(["dest", "origin", "carrier"]
-                         ).groupby("dest").head().set_index('dest'))
+    result = df.sort_values(["dest", "origin", "carrier"]).groupby("dest").head().set_index('dest')
+    return result
+
 
 # exo5()
-
 
 def exo6():
     """Quelles sont les compagnies qui n'opèrent pas
@@ -139,14 +133,22 @@ def exo6():
         origins[AIRLINES_JSON[compagnie[0]]] = (
             compagnie[1].drop_duplicates("origin").origin.to_list())
     print("\n", "carrier that go to all dest:")
-    destinations = {}
     for compagnie in compagnies:
         if len(compagnie[1].drop_duplicates("dest")) == len(arrival_airports):
             print(AIRLINES_JSON[compagnie[0]])
-        destinations[AIRLINES_JSON[compagnie[0]]] = (
-            compagnie[1].drop_duplicates("dest").dest.to_list())
-    pprint(destinations)
+    return
+    {
+        "Nombre de vols par destination" : AIRLINES_JSON[compagnie[0]]
+    }
+
+#exo6()
+
+def flight_cancelled():
+    print(
+        len(FLIGHTS.loc[FLIGHTS["dep_time"] == " "]
+            .loc[FLIGHTS["arr_time"] == " "]
+            .loc[FLIGHTS["air_time"] == " "]
+            ))
 
 
-exo5()
-exo6()
+# flight_cancelled()
