@@ -22,6 +22,12 @@ st.pyplot(exo3_carrier_nb_dest())
 st.subheader('Nombre de destination par compagnie par aéroprt')
 st.pyplot(exo3_carrier_nb_origin())
 
-st.subheader('Exercise 1')
+st.subheader('Exercice 1')
 st.write(exo1())
+
+st.subheader('Exercice 5')
+st.text(exo5())
+
+st.subheader('Exercice 6')
+st.write(exo6())
 
