@@ -1,7 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import warnings
-from pprint import pprint
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Adrien DELACROIX
@@ -52,8 +51,6 @@ def exo1():
     }
 
 
-
-
 # exo1()
 
 
@@ -68,6 +65,7 @@ def exo3_carrier_nb_dest() -> None:
             figsize=(8, 8),
             title="nombre de destination par compagnie aérienne")
     plt.show()
+
 
 def exo3_carrier_nb_origin() -> None:
     res = {}
@@ -107,7 +105,8 @@ def exo5() -> None:
     df['dest'] = df['dest'].map(AIRPORTS.set_index('faa')['name'])
     df['carrier'] = df['carrier'].map(
         AIRLINES.set_index('carrier')['name'])
-    result = df.sort_values(["dest", "origin", "carrier"]).groupby("dest").head().set_index('dest')
+    result = df.sort_values(["dest", "origin", "carrier"]).groupby(
+        "dest").head().set_index('dest')
     return result
 
 
@@ -123,25 +122,24 @@ def exo6():
     starting_airport = FLIGHTS.origin.drop_duplicates().to_list()
     arrival_airports = FLIGHTS.dest.drop_duplicates().to_list()
     compagnies = FLIGHTS.set_index("carrier").groupby("carrier")
-    print("\n", "carrier that start from all origin:")
+    print("\n", "carrier that don't start from all origin:")
     origins = {}
     for compagnie in compagnies:
         if len(
-                compagnie[1].drop_duplicates("origin")) == len(
+                compagnie[1].drop_duplicates("origin")) < len(
                     starting_airport):
             print(AIRLINES_JSON[compagnie[0]])
         origins[AIRLINES_JSON[compagnie[0]]] = (
             compagnie[1].drop_duplicates("origin").origin.to_list())
-    print("\n", "carrier that go to all dest:")
+    print("\n", "carrier that go to all dest:")  # None
     for compagnie in compagnies:
         if len(compagnie[1].drop_duplicates("dest")) == len(arrival_airports):
             print(AIRLINES_JSON[compagnie[0]])
     return
-    {
-        "Nombre de vols par destination" : AIRLINES_JSON[compagnie[0]]
-    }
 
-#exo6()
+
+exo6()
+
 
 def flight_cancelled():
     print(
