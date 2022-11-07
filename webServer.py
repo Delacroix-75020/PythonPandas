@@ -8,14 +8,14 @@ DATE_COLUMN = 'date/time'
 DATA_URL = ('https://s3-us-west-2.amazonaws.com/'
             'streamlit-demo-data/uber-raw-data-sep14.csv.gz')
 
+
 @st.cache
 def load_data(nrows):
     data = pd.read_csv(DATA_URL, nrows=nrows)
-    lowercase = lambda x: str(x).lower()
+    def lowercase(x): return str(x).lower()
     data.rename(lowercase, axis='columns', inplace=True)
     data[DATE_COLUMN] = pd.to_datetime(data[DATE_COLUMN])
     return data
-
 
 
 st.subheader('Exercice 1')
@@ -26,7 +26,7 @@ st.text(busiest_departure_airport())
 st.text("--------------------------")
 st.text(most_frequent_destinations())
 st.text("--------------------------")
-#st.text(less_frequent_destinations())
+# st.text(less_frequent_destinations())
 st.text("--------------------------")
 st.text(planes_taken_off_the_least())
 st.text("--------------------------")
@@ -34,7 +34,7 @@ st.text(planes_taken_off_the_most())
 st.text("--------------------------")
 
 
-#Exercice 3
+# Exercice 3
 
 st.subheader('Nombre de destination par compagnie aérienne')
 st.pyplot(exo3_carrier_nb_dest())
@@ -42,7 +42,7 @@ st.pyplot(exo3_carrier_nb_dest())
 st.subheader('Nombre de destination par compagnie par aéroprt')
 st.pyplot(exo3_carrier_nb_origin())
 
-#Exercice4
+# Exercice4
 
 st.subheader('Exercice 4')
 st.text(landed_in_Houston())
@@ -65,5 +65,3 @@ st.write(destinations_exclusive())
 
 st.subheader('Exercice 8')
 st.write(flights_UAD())
-
-

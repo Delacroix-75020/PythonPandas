@@ -54,32 +54,38 @@ def exo1():
 
 # Exercice 2 :
 
+
 def busiest_departure_airport():
     aeroport = FLIGHTS["origin"].mode()
     return aeroport
 
+
 def most_frequent_destinations():
-    merged_tables = FLIGHTS.merge(AIRPORTS,how ='left', left_on ='dest', right_on ='faa')
-    frequent_destinations = merged_tables['name'].value_counts(normalize=True).head(10)
+    merged_tables = FLIGHTS.merge(
+        AIRPORTS, how='left', left_on='dest', right_on='faa')
+    frequent_destinations = merged_tables['name'].value_counts(
+        normalize=True).head(10)
     return frequent_destinations
 
+
 def less_frequent_destinations():
-    merged_tables = FLIGHTS.merge(AIRPORTS,how ='left', left_on ='dest', right_on ='faa')
+    merged_tables = FLIGHTS.merge(
+        AIRPORTS, how='left', left_on='dest', right_on='faa')
     less_frequent = merged_tables['name'].value_counts(normalize=True).tail(10)
     return less_frequent
 
-less_frequent_destinations()
 
 def planes_taken_off_the_most():
-    planes_most  = FLIGHTS['tailnum'].value_counts().head(10)
+    planes_most = FLIGHTS['tailnum'].value_counts().head(10)
     return planes_most
+
 
 def planes_taken_off_the_least():
     les_10_avions_moins = FLIGHTS['tailnum'].value_counts().tail(10)
     return les_10_avions_moins
 
 
-#Exercice 3 :
+# Exercice 3 :
 
 def exo3_carrier_nb_dest() -> None:
     res1 = {}
@@ -108,26 +114,33 @@ def exo3_carrier_nb_origin() -> None:
              title="nombre de destination par compagnie par aéroprt d'origine")
     plt.show()
 
-#Exercice 4 :
+# Exercice 4 :
+
+
 def landed_in_Houston():
-    landed_Houston = FLIGHTS.loc[FLIGHTS['dest'].isin(['IAH','HOU'])]
+    landed_Houston = FLIGHTS.loc[FLIGHTS['dest'].isin(['IAH', 'HOU'])]
     return landed_Houston
+
+
 def NYC_to_Seattle():
     NYC_to_Seattle_table = FLIGHTS.loc[FLIGHTS['dest'].isin(["SEA"])]
     NYC_Seattle = NYC_to_Seattle_table['dest'].value_counts()
     return NYC_Seattle
 
+
 def carrier_NYC_to_Seattle():
     NYC_to_Seattle_table = FLIGHTS.loc[FLIGHTS['dest'].isin(["SEA"])]
-    NYC_Seattle_carrier = NYC_to_Seattle_table['carrier'].drop_duplicates(keep='first').count()
+    NYC_Seattle_carrier = NYC_to_Seattle_table['carrier'].drop_duplicates(
+        keep='first').count()
     return NYC_Seattle_carrier
 
+
 def plane_NYC_to_Seattle():
-    flights_sea = FLIGHTS[FLIGHTS['dest']=='SEA']
+    flights_sea = FLIGHTS[FLIGHTS['dest'] == 'SEA']
     return flights_sea['tailnum'].nunique()
 
 
-#Exercice 5 :
+# Exercice 5 :
 
 def exo5() -> None:
     """Trouver le nombre de vols par destination ?
@@ -154,7 +167,8 @@ def exo5() -> None:
         "dest").head().set_index('dest')
     return result
 
-#Exercice 6 :
+# Exercice 6 :
+
 
 def exo6():
     """Quelles sont les compagnies qui n'opèrent pas
@@ -166,33 +180,44 @@ def exo6():
     starting_airport = FLIGHTS.origin.drop_duplicates().to_list()
     arrival_airports = FLIGHTS.dest.drop_duplicates().to_list()
     compagnies = FLIGHTS.set_index("carrier").groupby("carrier")
-    print("\n", "carrier that don't start from all origin:")
     origins = {}
+    dest = {}
+    no_all_origins = []
     for compagnie in compagnies:
         if len(
                 compagnie[1].drop_duplicates("origin")) < len(
                     starting_airport):
-            print(AIRLINES_JSON[compagnie[0]])
+            no_all_origins.append(AIRLINES_JSON[compagnie[0]])
         origins[AIRLINES_JSON[compagnie[0]]] = (
             compagnie[1].drop_duplicates("origin").origin.to_list())
-    print("\n", "carrier that go to all dest:")  # None
     for compagnie in compagnies:
         if len(compagnie[1].drop_duplicates("dest")) == len(arrival_airports):
-            print(AIRLINES_JSON[compagnie[0]])
+            print(AIRLINES_JSON[compagnie[0]])  # None
+        dest[AIRLINES_JSON[compagnie[0]]] = (compagnie[1].drop_duplicates(
+            ["origin", "dest"])[["origin", "dest"]])
+    return {
+        "carrier that don't start from all origin:": no_all_origins,
+        "carrier that go to all dest:": None,
+        "origin and destination of all carrier": dest
+    }
 
 
-#Exercice 7 :
+print(exo6())
+
+# Exercice 7 :
+
 
 def destinations_exclusive():
     groupby_destination_table = FLIGHTS.groupby(by="dest").nunique()
-    exclusive  = groupby_destination_table[groupby_destination_table['carrier'] == 1 ]
+    exclusive = groupby_destination_table[groupby_destination_table['carrier'] == 1]
     return list(exclusive.index.values)
 
 
-#Exercice 8 :
+# Exercice 8 :
 
 def flights_UAD():
-    United_American_Delta_table  = FLIGHTS.loc[FLIGHTS['carrier'].isin(["UA", "AA", "DL"])]
+    United_American_Delta_table = FLIGHTS.loc[FLIGHTS['carrier'].isin([
+                                                                      "UA", "AA", "DL"])]
     return United_American_Delta_table
 
 
@@ -202,4 +227,3 @@ def flight_cancelled():
             .loc[FLIGHTS["arr_time"] == " "]
             .loc[FLIGHTS["air_time"] == " "]
             ))
-
