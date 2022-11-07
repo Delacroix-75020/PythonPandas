@@ -48,6 +48,9 @@ def exo1():
     df = AIRPORTS.tzone.drop(AIRPORTS.tzone[AIRPORTS.tzone == "\\N"].index)
     print("number of unique timezone", len(df.value_counts()))
     return {
+        "number of unique origin": len(FLIGHTS.origin.drop_duplicates()),
+        "number of unique arrival": len(
+            FLIGHTS.dest.drop_duplicates()),
         "number of airports in US where there's no DST:": count,
         "number of unique timezone": len(df.value_counts())
     }
