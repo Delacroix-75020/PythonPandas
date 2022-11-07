@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import warnings
+from pprint import pprint
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Adrien DELACROIX
@@ -196,8 +197,16 @@ def exo6():
     for compagnie in compagnies:
         if len(compagnie[1].drop_duplicates("dest")) == len(arrival_airports):
             print(AIRLINES_JSON[compagnie[0]])  # None
-        dest[AIRLINES_JSON[compagnie[0]]] = (compagnie[1].drop_duplicates(
-            ["origin", "dest"])[["origin", "dest"]])
+        dest[AIRLINES_JSON[compagnie[0]]] = {}
+        for col in compagnie[1][["origin", "dest"]]:
+            dest[AIRLINES_JSON[compagnie[0]]][col] = []
+            for airport in compagnie[1][["origin", "dest"]].drop_duplicates(col)[col].to_list():
+                try:
+                    dest[AIRLINES_JSON[compagnie[0]]][col].append(
+                        AIRPORTS_JSON[airport])
+                    print()
+                except Exception:
+                    dest[AIRLINES_JSON[compagnie[0]]][col].append(airport)
     return {
         "carrier that don't start from all origin:": no_all_origins,
         "carrier that go to all dest:": None,
@@ -205,7 +214,7 @@ def exo6():
     }
 
 
-print(exo6())
+#pprint(exo6())
 
 # Exercice 7 :
 
