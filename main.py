@@ -214,7 +214,7 @@ def exo6():
     }
 
 
-#pprint(exo6())
+# pprint(exo6())
 
 # Exercice 7 :
 
@@ -231,6 +231,9 @@ def flights_UAD():
     United_American_Delta_table = FLIGHTS.loc[FLIGHTS['carrier'].isin([
                                                                       "UA", "AA", "DL"])]
     return United_American_Delta_table
+
+
+print(flights_UAD())
 
 
 def flight_cancelled():

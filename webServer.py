@@ -64,4 +64,4 @@ st.subheader('Exercice 7')
 st.write(destinations_exclusive())
 
 st.subheader('Exercice 8')
-st.write(flights_UAD())
+st.text(flights_UAD())
